@@ -5,6 +5,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,8 +82,18 @@ public class SelenideBankiruLentaPaginationTest {
 
     private int extractCurrentNewsPageFromTheUrl() {
 
-        String pageNumberStr = url().replaceAll("[^\\d]", "");
-        return Integer.parseInt(pageNumberStr);
+        String currentUrl = url();
+        int currentPageNumber = 0;
+        try {
+            URL aURL = new URL(currentUrl);
+            String pageNumberStr = aURL.getPath().replaceAll("[^\\d]", "");
+            currentPageNumber += Integer.parseInt(pageNumberStr);
+        }
+        catch (MalformedURLException e)
+        {
+            System.err.print("Malformed current url " + currentUrl);
+        }
+        return currentPageNumber;
     }
 
     private void openLastPage() {
